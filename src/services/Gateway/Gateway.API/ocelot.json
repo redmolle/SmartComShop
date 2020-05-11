@@ -1,0 +1,23 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/catalog/{catchAll}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 9001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/catalog/{catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    }
+  ],
+    "AuthenticationOptions": {
+    "AuthenticationProviderKey": "IdentityApiKey",
+    "AllowedScopes": []
+  },
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5001"
+  }
+}
