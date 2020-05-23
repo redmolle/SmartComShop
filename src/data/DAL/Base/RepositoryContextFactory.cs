@@ -18,7 +18,8 @@ namespace DAL
 
         public RepositoryContext CreateDbContext(string[] args)
         {
-            return this.CreateDbContext("");
+            //To DO
+            return this.CreateDbContext("Host=localhost;Port=5432;Database=SmartComShopDb;Username=postgres;Password=password");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,6 +16,7 @@ namespace Models
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [JsonProperty("id")]
         public Guid Id { get; set; }
 
         /// <summary>
@@ -23,22 +25,25 @@ namespace Models
         /// Не пустое.
         /// </summary>
         [Required]
-        [DisplayFormat(DataFormatString = "0:##-####-####", ApplyFormatInEditMode = true, NullDisplayText = "")]
+        [JsonProperty("code")]
         public string Code { get; set; }
 
         /// <summary>
         /// Наименование товара.
         /// </summary>
+        [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Цена за единицу.
         /// </summary>
+        [JsonProperty("price")]
         public double Price { get; set; }
 
         /// <summary>
         /// Категория товара.
         /// </summary>
+        [JsonProperty("category")]
         public string Category { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace Auth.Lib
         /// </summary>
         /// <param name="claims">Набор требований.</param>
         /// <returns>Токен Jwt.</returns>
-        public static string GenerateToken(IEnumerable<Claim> claims)
+        public static string GenerateToken(IEnumerable<Claim> claims, int? minutes = null)
         {
             var now = DateTime.UtcNow;
 
@@ -55,7 +55,7 @@ namespace Auth.Lib
                 audience: AUDIENCE,
                 notBefore: now,
                 claims: claims,
-                expires: now.AddMinutes(LIFETIME),
+                expires: now.AddMinutes(minutes ?? LIFETIME),
                 signingCredentials: new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 

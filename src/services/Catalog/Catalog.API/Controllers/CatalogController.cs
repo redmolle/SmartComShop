@@ -55,23 +55,21 @@ namespace Catalog.API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = Role.Manager)]
-        [Route("items")]
-        public async Task<IActionResult> UpdateItem([FromBody]ItemModel item)
+        //[Authorize(Roles = Role.Manager)]
+        [Route("items/{id:Guid}")]
+        public async Task<IActionResult> UpdateItem(Guid id, [FromBody]ItemModel item)
         {
-            var updatedGuid = await this._repository.UpdateItem(item);
-            if (updatedGuid == null)
+            var oldItem = await this._repository.GetItem(id);
+            if (oldItem == null)
             {
                 return NotFound(new { Message = $"Item with id {item.Id} not found." });
             }
-            else
-            {
-                return CreatedAtAction(nameof(ItemById), new { id = item.Id }, null);
-            }
+            var updatedGuid = await this._repository.UpdateItem(item);
+            return CreatedAtAction(nameof(ItemById), new { id = item.Id }, null);
         }
 
         [HttpPost]
-        [Authorize(Roles = Role.Manager)]
+        //[Authorize(Roles = Role.Manager)]
         [Route("items")]
         public async Task<IActionResult> CreateItem([FromBody]ItemModel item)
         {
@@ -80,7 +78,7 @@ namespace Catalog.API.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = Role.Manager)]
+        //[Authorize(Roles = Role.Manager)]
         [Route("items/{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
         {

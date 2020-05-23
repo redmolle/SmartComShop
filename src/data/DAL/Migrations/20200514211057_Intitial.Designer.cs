@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20200511143600_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20200514211057_Intitial")]
+    partial class Intitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace DAL.Migrations
                 .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Models.Customer", b =>
+            modelBuilder.Entity("Models.CustomerModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +46,7 @@ namespace DAL.Migrations
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("Models.Item", b =>
+            modelBuilder.Entity("Models.ItemModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,34 +68,6 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Item");
-                });
-
-            modelBuilder.Entity("Models.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("Customer_Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Order_Date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("Order_Number")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Shipment_Date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Customer_Id");
-
-                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Models.OrderItem", b =>
@@ -125,6 +97,34 @@ namespace DAL.Migrations
                     b.ToTable("OrderItem");
                 });
 
+            modelBuilder.Entity("Models.OrderModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("Customer_Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Order_Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Order_Number")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Shipment_Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Customer_Id");
+
+                    b.ToTable("Order");
+                });
+
             modelBuilder.Entity("Models.UserModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -147,26 +147,26 @@ namespace DAL.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Models.Order", b =>
-                {
-                    b.HasOne("Models.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("Customer_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Models.OrderItem", b =>
                 {
-                    b.HasOne("Models.Item", "Item")
+                    b.HasOne("Models.ItemModel", "Item")
                         .WithMany()
                         .HasForeignKey("Item_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Order", "Order")
+                    b.HasOne("Models.OrderModel", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("Order_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.OrderModel", b =>
+                {
+                    b.HasOne("Models.CustomerModel", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("Customer_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
