@@ -10,13 +10,13 @@ export const Catalog = (state = initialState, action) => {
         case ACTION_TYPES.FETCH_ALL:
             return {
                 ...state,
-                list:[...action.payload]
+                list:[...state.list, ...action.payload]
             }
 
         case ACTION_TYPES.CREATE:
             return {
                 ...state,
-                list:[...action.payload]
+                list:[...state.list, action.payload]
             }
         case ACTION_TYPES.UPDATE:
             return {

@@ -73,8 +73,8 @@ namespace Catalog.API.Controllers
         [Route("items")]
         public async Task<IActionResult> CreateItem([FromBody]ItemModel item)
         {
-            var createdGuid = await this._repository.CreateItem(item);
-            return CreatedAtAction(nameof(ItemById), new { id = createdGuid }, null);
+            var createdItem = await this._repository.CreateItem(item);
+            return CreatedAtAction(nameof(ItemById), new { id = createdItem.Id }, createdItem);
         }
 
         [HttpDelete]

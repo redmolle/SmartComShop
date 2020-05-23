@@ -31,19 +31,18 @@ export const Create = (data, onSuccess) => dispatch => {
     api.Catalog().create(data)
     .then(
         response => {
-            console.log(response)
         dispatch({
             type: ACTION_TYPES.CREATE,
             payload: response.data
         })
         onSuccess()
     })
-    .catch(err => {console.log(err); console.log(111)})
+    .catch(err => console.log(err))
 }
 
 export const Update = (id, data, onSuccess) => dispatch => {
     data = formatData(data)
-    api.Catalog().update(id.data)
+    api.Catalog().update(id, data)
     .then(res => {
         dispatch({
             type: ACTION_TYPES.UPDATE,

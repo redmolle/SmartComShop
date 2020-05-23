@@ -26,11 +26,12 @@ const [currentId, setCurrentId] = useState(0)
         props.fetchAllCatalog()
     }, [])
 
-    const { addToast } = useToasts
+    const { addToast } = useToasts()
 
     const onDelete = id => {
         if(window.confirm('Are you sure to delete this?'))
-        props.deleteItem(id, () => {addToast("Deleted successfully", {appearance:'info'})})}
+        props.deleteItem(id, () => {addToast("Deleted successfully", {appearance:'info'})}) //TODO не работает toast
+    }
     return (
         <Paper className={classes.paper} elevation={3}>
             <Grid container>

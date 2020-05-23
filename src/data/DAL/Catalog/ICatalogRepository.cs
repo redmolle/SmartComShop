@@ -18,7 +18,7 @@ namespace DAL.Catalog
 
         Task<Guid?> UpdateItem(ItemModel item);
 
-        Task<Guid?> CreateItem(ItemModel item);
+        Task<ItemModel> CreateItem(ItemModel item);
 
         Task<bool> DeleteItem(Guid id);
     }
