@@ -29,9 +29,6 @@ const initialFieldValues = {
 }
 
 const CatalogForm = ({classes, ...props}) => {
-    const [values, setValues] = useState(initialFieldValues)
-    const [errors, setErrors] = useState({})
-    //TODO перейти на систему UseForm
     const { addToast } = useToasts
 
     const validate = (fieldValues = values) => {
@@ -52,16 +49,15 @@ const CatalogForm = ({classes, ...props}) => {
             return Object.values(temp).every(x => x == "")
     }
 
-    const handleInputChange = e =>{
-        e.preventDefault()
-        const { name, value } = e.target
-        const fieldValue = { [name]: value }
-        setValues({
-            ...values,
-            ...fieldValue
-        })
-        validate(fieldValue)
-    }
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange,
+        resetForm
+    } = useForm(initialFieldValues, validate, props.setCurrentId)
+
 
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
@@ -81,13 +77,6 @@ const CatalogForm = ({classes, ...props}) => {
             else
                 props.updateItem(props.currentId, values, onSuccess)
         }
-    }
-
-    const resetForm = () => {
-        setValues({
-            ...initialFieldValues
-        })
-        setErrors({})
     }
 
     useEffect(() => {
@@ -121,6 +110,7 @@ const CatalogForm = ({classes, ...props}) => {
                             onChange={handleInputChange}
                             lableWidth={labelWidth}
                         >
+                            //TODO начитать из бд
                             <MenuItem value="">Select Category</MenuItem>
                             <MenuItem value="Car">Авто</MenuItem>
                             <MenuItem value="Moto">Мото транспорт</MenuItem>
@@ -157,7 +147,7 @@ const CatalogForm = ({classes, ...props}) => {
                         <Button
                             variant="contained"
                             className={classes.smMargin}
-                            //onClick={resetForm()}
+                            onClick={resetForm}
                         >
                             Reset
                         </Button>
