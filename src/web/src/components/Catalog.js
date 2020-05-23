@@ -26,7 +26,7 @@ const [currentId, setCurrentId] = useState(0)
         props.fetchAllCatalog()
     }, [])
 
-    const { addToast } = useToasts
+    const { addToast } = useToasts()
 
     const onDelete = id => {
         if(window.confirm('Are you sure to delete this?'))

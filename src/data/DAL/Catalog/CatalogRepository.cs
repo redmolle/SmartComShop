@@ -21,7 +21,7 @@ namespace DAL.Catalog
             }
         }
 
-        public async Task<Guid?> CreateItem(ItemModel item)
+        public async Task<ItemModel> CreateItem(ItemModel item)
         {
             var createItem = new ItemModel
             {
@@ -36,7 +36,7 @@ namespace DAL.Catalog
                 context.Item.Add(createItem);
                 await context.SaveChangesAsync();
 
-                return createItem.Id;
+                return createItem;
             }
         }
 

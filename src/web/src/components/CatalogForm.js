@@ -29,7 +29,7 @@ const initialFieldValues = {
 }
 
 const CatalogForm = ({classes, ...props}) => {
-    const { addToast } = useToasts
+    const { addToast } = useToasts()
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -70,12 +70,12 @@ const CatalogForm = ({classes, ...props}) => {
         if (validate()) {
             const onSuccess = () => {
                 resetForm()
-                addToast("Submitted successfully", {appearance:'success'})
+                addToast("Submitted successfully", { appearance: 'success' })
             }
             if (props.currentId == 0)
-                props.createItem(values, onSuccess)
-            else
-                props.updateItem(props.currentId, values, onSuccess)
+                {props.createItem(values, onSuccess)}
+            else{
+                props.updateItem(props.currentId, values, onSuccess)}
         }
     }
 

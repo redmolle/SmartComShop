@@ -31,7 +31,6 @@ export const Create = (data, onSuccess) => dispatch => {
     api.Catalog().create(data)
     .then(
         response => {
-            console.log(response)
         dispatch({
             type: ACTION_TYPES.CREATE,
             payload: response.data
