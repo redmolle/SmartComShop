@@ -1,7 +1,6 @@
-import { combineReducers } from 'redux';
-import { Catalog } from './Catalog';
-
+import { combineReducers } from 'redux'
+import { CatalogReducer } from './CatalogReducer'
 
 export const reducers = combineReducers({
-    Catalog
+    CatalogReducer
 })

@@ -12,7 +12,7 @@ namespace DAL.Catalog
 
         Task<long> Count();
 
-        Task<Page<ItemModel>> GetItems(int pageSize, int pageIndex, string category = null);
+        Task<Page<ItemModel>> GetItems(int pageSize, int pageIndex, string order = "asc", string orderBy = "name", string search = null);
 
         Task<IEnumerable<string>> GetCategories();
 

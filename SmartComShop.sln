@@ -20,6 +20,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{095A9780-0B15-4A41-BAD5-B4E044BDBABC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "src\services\Catalog\Catalog.API\Catalog.API.csproj", "{E5D69118-FBFB-41F2-AF5C-7FCD42CDDB0A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{98C8B27D-5483-4D00-AF59-F1B78ED9DDFE} = {98C8B27D-5483-4D00-AF59-F1B78ED9DDFE}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{1136BE7B-C1B4-4AF7-BA7D-CB7E3A82955D}"
 EndProject

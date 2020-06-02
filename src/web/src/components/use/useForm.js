@@ -1,20 +1,19 @@
-import React, { useState, useEffect }from 'react'
+import React, { useState, useEffect } from "react";
 
 const useForm = (initialFieldValues, validate, setCurrentId) => {
     const [values, setValues] = useState(initialFieldValues)
     const [errors, setErrors] = useState({})
 
-    const handleInputChange = e =>{
-        e.preventDefault()
+    const handleInputChange = e => {
         const { name, value } = e.target
         const fieldValue = { [name]: value }
-        this.setValues({
+        setValues({
             ...values,
             ...fieldValue
         })
         validate(fieldValue)
     }
-    
+
     const resetForm = () => {
         setValues({
             ...initialFieldValues
@@ -23,14 +22,14 @@ const useForm = (initialFieldValues, validate, setCurrentId) => {
         setCurrentId(0)
     }
 
-    return (
+    return {
         values,
         setValues,
         errors,
         setErrors,
         handleInputChange,
         resetForm
-    );
+    };
 }
 
 export default useForm;
