@@ -1,8 +1,7 @@
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import SearchIcon from "@material-ui/icons/Search";
-import { lighten, Toolbar, Typography, withStyles, TextField, Tooltip } from "@material-ui/core";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';import { lighten, Toolbar, Typography, withStyles, TextField, Tooltip, ButtonGroup } from "@material-ui/core";
+import FilterListOutlinedIcon from '@material-ui/icons/FilterListOutlined';
 import React from 'react'
 
 const styles = (theme) => ({
@@ -20,53 +19,66 @@ const styles = (theme) => ({
               color: theme.palette.text.primary,
               backgroundColor: theme.palette.secondary.dark,
             },
-      title: {
-        flex: '1 1 100%',
-      },
+			title: {
+			  flex: '1 1 40%',
+			},
+			searchString: {
+			  flex: '1 1 80%',
+			},
 });
 
-const ViewTableToolbar = ({
-	classes,
-	title,
-	searchString,
-	handleChangeSearchString,
-	...props
-}) => {
+const SmartToolbar = ({classes,setSelectedRows, ...props}) => {
+	const handleClearClick = (event) => {
+		setSelectedRows([])
+	}
 	return (
 		<Toolbar className={classes.root}>
+		{props.numSelected > 0 ? (
+			<Typography
+				className={classes.title}
+				variant="subtitile1"
+				component="div"
+			>
+				Выбрано строк: {props.numSelected}
+			</Typography>
+		) : (
 			<Typography
 				className={classes.title}
 				variant='h6'
 				id='tableTitle'
-				component='div'>
-				{title}
+				component='div'
+			>
+				{props.title}
 			</Typography>
+		)}
 			<TextField
 				name='search'
 				variant='outlined'
 				label='Поиск'
 				fullWidth
-				value={searchString}
-				onChange={handleChangeSearchString}
+				className={classes.searchString}
+				value={props.searchString}
+				onChange={props.handleChangeSearchString}
 				InputProps={{
 					endAdornment: (
 						<InputAdornment>
 							<IconButton>
-								<SearchIcon />
+								<SearchOutlinedIcon />
 							</IconButton>
 						</InputAdornment>
 					),
 				}}
 			/>
-			{searchString && (
+			<ButtonGroup>
 				<Tooltip title='Очитить поисковую строку'>
 					<IconButton aria-label='filter label'>
-						<FilterListIcon onClick={handleChangeSearchString} />
+						<FilterListOutlinedIcon onClick={handleClearClick} />
 					</IconButton>
 				</Tooltip>
-			)}
+				{props.children}
+			</ButtonGroup>
 		</Toolbar>
 	);
 };
 
-export default withStyles(styles)(ViewTableToolbar)
+export default withStyles(styles)(SmartToolbar)

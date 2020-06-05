@@ -3,31 +3,25 @@ import React from 'react'
 const baseUrl = 'http://localhost:7000/api/'
 
 
-const buildQuery = (page, pageSize, order=null, orderBy=null, search=null) => {
-    let query = `?pageIndex=${page}&pageSize=${pageSize}` 
-    if (order !== null)
-    {
-        query += `&order=${order}`
+const buildQuery = (params) => {
+    const queryParam = (string, value) => {
+        return value && `${string}=${value}`
     }
-    if (orderBy !== null)
-    {
-        query += `&orderBy=${orderBy}`
-    }
-    if (search !== null)
-    {
-        query += `&search=${search}`
-    }
-    console.log(query)
+    let query = Object.keys(params).map((key) => {
+        const value = params[key]
+        if (value) {
+            return key + '=' + value
+        }
+    })
+    .join('&')
+    query = query === "" ? "" : `?${query}`
     return query
 }
 
 export default {
     Catalog(url=baseUrl + 'catalog/items/'){
         return {
-            fetchAll: () => axios.get(url),
-            fetchByPage : (page, pageSize) => axios.get(url + buildQuery(page, pageSize)),
-            orderedFetch: (page, pageSize, order, orderBy) => axios.get(url + buildQuery(page, pageSize, order, orderBy)),
-            enhancedFetch: (page, pageSize, order, orderBy, search) => axios.get(url + buildQuery(page, pageSize, order, orderBy, search)),
+            readPage: (params) => axios.get(url + buildQuery(params)),
             fetchById : id => axios.get(url + id),
             create : newRecord => axios.post(url, newRecord),
             update : (id, updateRecord) => axios.put(url + id, updateRecord),

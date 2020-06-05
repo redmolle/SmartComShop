@@ -18,14 +18,15 @@ const formatData = data => ({
     price:Number(data.price)
 })
 
-export const EnhancedFetch = (
-    page = 0,
-    pageSize = 25,
-    order="asc",
-    orderBy="name",
-    search=null,
+export const ReadPage = (
+    params = {
+    pageIndex: 0,
+    pageSize: 5,
+    order:"asc",
+    orderBy:"name",
+    search:'',}
 ) => dispatch => {
-    api.Catalog().enhancedFetch(page, pageSize, order, orderBy, search)
+    api.Catalog().readPage(params)
     .then(
         response => {
             dispatch({
@@ -40,21 +41,19 @@ export const EnhancedFetch = (
 export const Create = (data, onSuccess) => dispatch => {
     data = formatData(data)
     api.Catalog().create(data)
-    .then(
-        response => {
-            console.log(response)
+    .then(res => {
         dispatch({
             type: ACTION_TYPES.CREATE,
-            payload: response.data
+            payload: res.data
         })
         onSuccess()
-    })    .catch(err => console.log(err))
-
+    })
+    .catch(err => console.log(err))
 }
 
 export const Update = (id, data, onSuccess) => dispatch => {
     data = formatData(data)
-    api.Catalog().update(id.data)
+    api.Catalog().update(id, data)
     .then(res => {
         dispatch({
             type: ACTION_TYPES.UPDATE,

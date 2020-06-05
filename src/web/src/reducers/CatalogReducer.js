@@ -2,7 +2,6 @@ import { ACTION_TYPES } from "../actions/CatalogActions";
 
 const initialState = {
 	list: [],
-	page: 0,
 	totalCount: 0,
 };
 
@@ -12,12 +11,9 @@ export const CatalogReducer = (state = initialState, action) => {
         case ACTION_TYPES.FETCH_BY_PAGE:
 		case ACTION_TYPES.ORDERED_FETCH:
 		case ACTION_TYPES.ENHANCED_FETCH:
-            console.log('22222')
-            console.log(action)
 			return {
 				...state,
-				list: action.payload.data,
-				page: action.payload.pageIndex,
+				list: [...action.payload.data],
 				totalCount: action.payload.count,
 			};
 		case ACTION_TYPES.FETCH_BY_ID:
@@ -27,7 +23,7 @@ export const CatalogReducer = (state = initialState, action) => {
 		case ACTION_TYPES.CREATE:
 			return {
 				...state,
-				list: [...action.payload],
+				totalCount: state.totalCount + 1,
 			};
 		case ACTION_TYPES.UPDATE:
 			return {
