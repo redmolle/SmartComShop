@@ -22,9 +22,9 @@ namespace Catalog.API.Controllers
 
         [HttpGet]
         [Route("items")]
-        public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0, [FromQuery]string order = "asc", [FromQuery]string orderBy="name", [FromQuery]string search=null)
         {
-            return Ok(await this._repository.GetItems(pageSize, pageIndex));
+            return Ok(await this._repository.GetItems(pageSize, pageIndex, order, orderBy, search));
         }
 
         [HttpGet]
@@ -42,9 +42,9 @@ namespace Catalog.API.Controllers
 
         [HttpGet]
         [Route("items/category/{category}")]
-        public async Task<IActionResult> ItemsByCategory(string category, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        public async Task<IActionResult> ItemsByCategory(string category, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0, [FromQuery]string order = "asc", [FromQuery]string orderBy = "name")
         {
-            return Ok(await this._repository.GetItems(pageSize, pageIndex, category));
+            return Ok(await this._repository.GetItems(pageSize, pageIndex, category, order, orderBy));
         }
 
         [HttpGet]

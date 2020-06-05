@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -76,23 +77,29 @@ namespace DAL.Catalog
             }
         }
 
-        public async Task<Page<ItemModel>> GetItems(int pageSize, int pageIndex, string category = null)
+        public async Task<Page<ItemModel>> GetItems(int pageSize, int pageIndex, string order = "asc", string orderBy = "name", string search = null)
         {
             using (var context = this.CreateContext())
             {
                 var query = context.Item.AsQueryable();
-                if (!string.IsNullOrWhiteSpace(category))
+                if (!string.IsNullOrWhiteSpace(search))
                 {
-                    query = query.Where(i => i.Category.ToLower().StartsWith(category.ToLower()));
+                    query = query.Where(i
+                        => i.Category.ToLower().Contains(search.ToLower())
+                        || i.Name.ToLower().Contains(search.ToLower()));
                 }
-
                 var count = await query.LongCountAsync();
 
-                var itemsOnPage = await query
-                    .OrderBy(i => i.Name)
-                    .Skip(pageSize * pageIndex)
-                    .Take(pageSize)
-                    .ToListAsync();
+                //this.Sort(query, order, orderBy);
+                var sorted = this.Sort(query, order, orderBy);
+
+                List<ItemModel> itemsOnPage = pageSize == -1
+                    ? await sorted.ToListAsync()
+                    : await sorted
+                     .Skip(pageSize * pageIndex)
+                     .Take(pageSize)
+                     .ToListAsync();
+
 
                 return new Page<ItemModel>(pageIndex, pageSize, count, itemsOnPage);
             }
@@ -114,6 +121,28 @@ namespace DAL.Catalog
 
                 return updatedItem.Id;
             }
+        }
+
+        private IOrderedQueryable<ItemModel> Sort(IQueryable<ItemModel> query, string order, string orderBy)
+        {
+            return orderBy.ToLower() switch
+            {
+                "code" => order == "desc"
+                ? query.OrderByDescending(i => i.Code)
+                : query.OrderBy(i => i.Code),
+
+                "category" => order == "desc"
+                ? query.OrderByDescending(i => i.Category)
+                : query.OrderBy(i => i.Category),
+
+                "price" => order == "desc"
+                ? query.OrderByDescending(i => i.Price)
+                : query.OrderBy(i => i.Price),
+
+                _ => order == "desc"
+                ? query.OrderByDescending(i => i.Name)
+                : query.OrderBy(i => i.Name),
+            };
         }
     }
 }
