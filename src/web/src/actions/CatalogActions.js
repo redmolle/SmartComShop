@@ -20,8 +20,8 @@ const formatData = data => ({
 
 export const ReadPage = (
     params = {
-    pageIndex: 0,
-    pageSize: 5,
+    page: 0,
+    rowsPerPage: 5,
     order:"asc",
     orderBy:"name",
     search:'',}

@@ -44,8 +44,8 @@ const useSmartTable = (idFieldCode="id",rows=[],orderProperty="name",refreshMeth
 
 	const refresh = () => {
         refreshMethod({
-			pageIndex: page,
-			pageSize: rowsPerPage,
+			page: page,
+			rowsPerPage: rowsPerPage,
 			order: order,
 			orderBy: orderBy,
 			search: searchString,

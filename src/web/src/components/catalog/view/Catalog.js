@@ -147,3 +147,4 @@ export default connect(
 	mapStateToProps,
 	mapActionToProps
 )(withStyles(styles)(Catalog));
+
