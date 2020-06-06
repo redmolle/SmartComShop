@@ -55,7 +55,7 @@ namespace Catalog.API.Controllers
         }
 
         [HttpPut]
-        //[Authorize(Roles = Role.Manager)]
+        [Authorize(Roles = Role.Manager)]
         [Route("items/{id:Guid}")]
         public async Task<IActionResult> UpdateItem(Guid id, [FromBody]ItemModel item)
         {
@@ -69,7 +69,7 @@ namespace Catalog.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = Role.Manager)]
+        [Authorize(Roles = Role.Manager)]
         [Route("items")]
         public async Task<IActionResult> CreateItem([FromBody]ItemModel item)
         {
@@ -78,7 +78,7 @@ namespace Catalog.API.Controllers
         }
 
         [HttpDelete]
-        //[Authorize(Roles = Role.Manager)]
+        [Authorize(Roles = Role.Manager)]
         [Route("items/{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
         {

@@ -1,7 +1,13 @@
 import axios from 'axios'
 import React from 'react'
-const baseUrl = 'http://localhost:7000/api/'
+import { getCookie } from '../components/users/Cookie'
+const baseUrl = 'http://192.168.0.111:7000/api/'
 
+const config = {
+    headers: {
+        Authorization: `Bearer ${getCookie('token')}`
+    }
+}
 
 const buildQuery = (params) => {
     const queryParam = (string, value) => {
@@ -23,9 +29,22 @@ export default {
         return {
             readPage: (params) => axios.get(url + buildQuery(params)),
             fetchById : id => axios.get(url + id),
-            create : newRecord => axios.post(url, newRecord),
-            update : (id, updateRecord) => axios.put(url + id, updateRecord),
-            delete : id => axios.delete(url + id)
+            create : newRecord => axios.post(url, newRecord, config),
+            update : (id, updateRecord) => axios.put(url + id, updateRecord, config),
+            delete : id => axios.delete(url + id, config),
+        }
+    },
+    Cart(url=baseUrl + 'cart/customerId/'){
+        return{
+            read: (customerId) => axios.get(url + customerId),
+            addItem: (customerId, itemId) => axios.put(url + customerId + `?itemId=${itemId}`),
+            deleteItem: (customerId, itemId) => axios.put(url + customerId + `?itemId=${itemId}`),
+            delete: (customerId) => axios.delete(url + customerId),
+        }
+    },
+    User(url=baseUrl + 'auth/'){
+        return {
+            token: (body) => axios.post(url + 'token', body)
         }
     }
 }

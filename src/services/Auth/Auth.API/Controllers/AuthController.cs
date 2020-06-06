@@ -18,9 +18,9 @@ namespace Auth.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private IIdentityRepository _repository;
+        private IUserRepository _repository;
 
-        public AuthController(IIdentityRepository repository)
+        public AuthController(IUserRepository repository)
         {
             this._repository = repository;
         }
@@ -32,7 +32,7 @@ namespace Auth.API.Controllers
             var identity = await this.GetIdentity(user.Login, user.Password);
             if (identity == null)
             {
-                return BadRequest(new { errorText = "Invalid username or password" });
+                return BadRequest(new { errorText = "Неверное имя пользователя или пароль!" });
             }
 
             var token = JwtAuth.GenerateToken(identity.Claims);

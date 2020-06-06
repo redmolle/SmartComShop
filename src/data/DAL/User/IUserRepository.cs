@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Identity
 {
-    public interface IIdentityRepository
+    public interface IUserRepository
     {
         Task<UserModel> GetUser(string userName);
 

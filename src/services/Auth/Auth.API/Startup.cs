@@ -31,17 +31,24 @@ namespace Auth.API
             services.AddControllers();
 
             services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
-            services.AddScoped<IIdentityRepository>(
+            services.AddScoped<IUserRepository>(
                 provider =>
-                new IdentityRepository(Configuration.GetConnectionString("DefaultConnection"),
+                new UserRepository(Configuration.GetConnectionString("DefaultConnection"),
                                       provider.GetService<IRepositoryContextFactory>())
             );
 
             JwtAuth.SetAuthService(services);
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseCors(options =>
+            options.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

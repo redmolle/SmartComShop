@@ -7,16 +7,22 @@ using System.Threading.Tasks;
 
 namespace DAL.Identity
 {
-    public class IdentityRepository : BaseRepository, IIdentityRepository
+    public class UserRepository : BaseRepository, IUserRepository
     {
-        public IdentityRepository(string connectionString, IRepositoryContextFactory contextFactory)
+        public UserRepository(string connectionString, IRepositoryContextFactory contextFactory)
             : base(connectionString, contextFactory) { }
 
         public async Task<UserModel> CheckUserCredentials(string userName, string userPassword)
         {
             using (var context = this.CreateContext())
             {
-                return await context.User.SingleOrDefaultAsync(u => u.Login.ToLower().Equals(userName.ToLower()) && u.Password.Equals(userPassword));
+                var user = await context.User.SingleOrDefaultAsync(u => u.Login == userName.ToLower());
+                if (user == null) {
+                    var userId = await CreateUser(new UserModel{Login =  userName, Password = userPassword});
+                    return await context.User.FirstOrDefaultAsync(u => u.Id == userId);
+                }
+
+                return user.Password == userPassword ? user : null;
             }
         }
 

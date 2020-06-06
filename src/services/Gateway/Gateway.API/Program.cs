@@ -21,6 +21,8 @@ namespace Gateway.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                    .UseUrls("http://192.168.0.111:7000")
+                    .UseIISIntegration()
                    .ConfigureAppConfiguration((host, config) =>
                    {
                        config.AddJsonFile("ocelot.json");
