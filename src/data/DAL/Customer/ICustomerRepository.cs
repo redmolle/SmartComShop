@@ -1,10 +1,13 @@
-﻿using System;
+﻿using DAL.Base;
+using Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DAL.Customer
 {
-    interface ICustomerRepository
+    public interface ICustomerRepository : ICrudRepository<CustomerModel>
     {
     }
 }

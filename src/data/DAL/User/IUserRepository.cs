@@ -1,17 +1,15 @@
-﻿using Models;
+﻿using DAL.Base;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Identity
+namespace DAL.User
 {
-    public interface IUserRepository
+    public interface IUserRepository : ICrudRepository<UserModel>
     {
-        Task<UserModel> GetUser(string userName);
-
-        Task<UserModel> CheckUserCredentials(string userName, string userPassword);
-
-        Task<Guid?> CreateUser(UserModel user);
+        Task<UserModel> ReadUserByCredentials(string userName, string userPassword);
+        Task<bool> IsExists(string userName);
     }
 }

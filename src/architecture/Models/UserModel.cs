@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,33 +16,34 @@ namespace Models
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [JsonProperty("id")]
         public Guid Id { get; set; }
 
         /// <summary>
         /// Имя пользователя.
         /// </summary>
         [Required]
-        [JsonProperty("login")]
         public string Login { get; set; }
 
         /// <summary>
         /// Пароль пользователя.
         /// </summary>
         [Required]
-        [JsonProperty("password")]
         public string Password { get; set; }
 
         /// <summary>
-        /// Строка ролей пользователя.
+        /// Менеджер?.
         /// </summary>
-        [JsonProperty("roleset")]
-        public string RoleSet { get; set; }
+        public bool IsManager { get; set; }
 
         /// <summary>
-        /// Набор ролей пользователей.
+        /// Id клиента.
         /// </summary>
-        [NotMapped]
-        public IEnumerable<string> Roles => RoleSet?.Split(',');
+        public Guid? Customer_Id { get; set; }
+
+        /// <summary>
+        /// Клиент.
+        /// </summary>
+        [ForeignKey("Cusomer_Id")]
+        public virtual CustomerModel Customer { get; set; }
     }
 }

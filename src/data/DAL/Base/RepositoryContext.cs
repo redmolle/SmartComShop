@@ -18,7 +18,7 @@ namespace DAL
 
         public DbSet<ItemModel> Item { get; set; }
 
-        public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<OrderItemModel> OrderItem { get; set; }
 
         public DbSet<UserModel> User { get; set; }
     }

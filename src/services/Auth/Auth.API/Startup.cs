@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Auth.Lib;
 using DAL;
-using DAL.Identity;
+using DAL.Customer;
+using DAL.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,11 @@ namespace Auth.API
             services.AddScoped<IUserRepository>(
                 provider =>
                 new UserRepository(Configuration.GetConnectionString("DefaultConnection"),
+                                      provider.GetService<IRepositoryContextFactory>())
+            );
+            services.AddScoped<ICustomerRepository>(
+                provider =>
+                new CustomerRepository(Configuration.GetConnectionString("DefaultConnection"),
                                       provider.GetService<IRepositoryContextFactory>())
             );
 

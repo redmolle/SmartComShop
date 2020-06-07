@@ -44,7 +44,7 @@ namespace DAL
             {
                 var users = new List<UserModel>
                 {
-                    new UserModel{ Login = "admin", Password = "admin", RoleSet = "Admin"},
+                    new UserModel{ Login = "admin", Password = "admin", IsManager = true},
                     new UserModel{Login = "test", Password = "test"}
                 };
                 users.ForEach(u => context.User.Add(u));

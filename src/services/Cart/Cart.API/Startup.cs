@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Auth.Lib;
 using DAL;
-using DAL.Cart;
+using DAL.Catalog;
+using DAL.Customer;
+using DAL.Order;
+using DAL.OrderItem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,9 +34,25 @@ namespace Cart.API
             services.AddControllers();
 
             services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
-            services.AddScoped<ICartRepository>(
+            services.AddScoped<IOrderRepository>(
                 provider =>
-                new CartRepository(Configuration.GetConnectionString("DefaultConnection"),
+                new OrderRepository(Configuration.GetConnectionString("DefaultConnection"),
+                                      provider.GetService<IRepositoryContextFactory>())
+            );
+            services.AddScoped<IOrderItemRepository>(
+                provider =>
+                new OrderItemRepository(Configuration.GetConnectionString("DefaultConnection"),
+                                      provider.GetService<IRepositoryContextFactory>())
+            );
+            services.AddScoped<ICustomerRepository>(
+                provider =>
+                new CustomerRepository(Configuration.GetConnectionString("DefaultConnection"),
+                                      provider.GetService<IRepositoryContextFactory>())
+            );
+
+            services.AddScoped<ICatalogRepository>(
+                provider =>
+                new CatalogRepository(Configuration.GetConnectionString("DefaultConnection"),
                                       provider.GetService<IRepositoryContextFactory>())
             );
 

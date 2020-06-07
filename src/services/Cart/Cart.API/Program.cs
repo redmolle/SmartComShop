@@ -19,7 +19,7 @@ namespace Cart.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                    .UseUrls("http://192.168.0.111:10000")
+                    .UseUrls("http://192.168.0.111:11000")
                     .UseIISIntegration()
                    .UseStartup<Startup>();
     }

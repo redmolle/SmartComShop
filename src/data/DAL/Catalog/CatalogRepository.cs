@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DAL.Base;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Models;
 using System;
@@ -14,134 +15,113 @@ namespace DAL.Catalog
         public CatalogRepository(string connectionString, IRepositoryContextFactory contextFactory)
             : base(connectionString, contextFactory) { }
 
-        public async Task<long> Count()
-        {
-            using (var context = this.CreateContext())
-            {
-                return await context.Item.LongCountAsync();
-            }
-        }
 
-        public async Task<Guid?> CreateItem(ItemModel item)
+        public async Task<Guid?> Create(ItemModel record)
         {
-            var createItem = new ItemModel
+            var createRecord = new ItemModel
             {
-                Category = item.Category,
-                Code = item.Code,
-                Name = item.Name,
-                Price = item.Price,
+                Category = record.Category,
+                Code = record.Code,
+                Name = record.Name,
+                Price = record.Price,
             };
 
             using (var context = CreateContext())
             {
-                context.Item.Add(createItem);
+                context.Item.Add(createRecord);
                 await context.SaveChangesAsync();
 
-                return createItem.Id;
+                return createRecord.Id;
             }
         }
 
-        public async Task<bool> DeleteItem(Guid id)
+        public async Task<ItemModel> Read(Guid id)
         {
             using (var context = this.CreateContext())
             {
-                var item = await context.Item.SingleOrDefaultAsync(i => i.Id == id);
+                try
+                {
+                    return await context.Item.SingleOrDefaultAsync(i => i.Id == id);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
 
-                if (item == null)
+        public async Task<PageModel<ItemModel>> ReadPage(int rowsPerPage = 5, int page = 0, string order = "asc", string orderBy = "name", string searchString = null)
+        {
+            using (var context = this.CreateContext())
+            {
+                var query = context.Item.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(searchString))
+                {
+                    query = query.Where(i
+                        => i.Category.ToLower().Contains(searchString.ToLower())
+                        || i.Name.ToLower().Contains(searchString.ToLower()));
+                }
+                var count = await query.LongCountAsync();
+
+                var sorted = order == "desc"
+                ? query.OrderByDescending(i => GetPropertyByName(i, orderBy))
+                : query.OrderBy(i => GetPropertyByName(i, orderBy));
+
+                List<ItemModel> rows = rowsPerPage == -1
+                    ? await sorted.ToListAsync()
+                    : await sorted
+                     .Skip(rowsPerPage * page)
+                     .Take(rowsPerPage)
+                     .ToListAsync();
+
+
+                return new PageModel<ItemModel>(page, rowsPerPage, count, rows);
+            }
+        }
+
+        public async Task<bool> Update(ItemModel record)
+        {
+            using (var context = this.CreateContext())
+            {
+                var updateRecord = await this.Read(record.Id);
+
+                if (updateRecord == null)
                 {
                     return false;
                 }
-                context.Item.Remove(item);
+
+                updateRecord = record;
+                await context.SaveChangesAsync();
+
+                return true;
+            }
+        }
+
+        public async Task<bool> Delete(Guid id)
+        {
+            using (var context = this.CreateContext())
+            {
+                var deleteRecord = await this.Read(id);
+
+                if (deleteRecord == null)
+                {
+                    return false;
+                }
+                context.Item.Remove(deleteRecord);
                 await context.SaveChangesAsync();
                 return true;
             }
         }
 
-        public async Task<IEnumerable<string>> GetCategories()
+
+        private object GetPropertyByName(ItemModel record, string property)
         {
-            using (var context = this.CreateContext())
+            return property switch
             {
-                return await context.Item
-                    .Select(i => i.Category)
-                    .Distinct()
-                    .ToListAsync();
-            }
-        }
-
-        public async Task<ItemModel> GetItem(Guid catalogId)
-        {
-            using (var context = this.CreateContext())
-            {
-                return await context.Item
-                    .FirstOrDefaultAsync(i => i.Id == catalogId);
-            }
-        }
-
-        public async Task<Page<ItemModel>> GetItems(int pageSize, int pageIndex, string order = "asc", string orderBy = "name", string search = null)
-        {
-            using (var context = this.CreateContext())
-            {
-                var query = context.Item.AsQueryable();
-                if (!string.IsNullOrWhiteSpace(search))
-                {
-                    query = query.Where(i
-                        => i.Category.ToLower().Contains(search.ToLower())
-                        || i.Name.ToLower().Contains(search.ToLower()));
-                }
-                var count = await query.LongCountAsync();
-
-                //this.Sort(query, order, orderBy);
-                var sorted = this.Sort(query, order, orderBy);
-
-                List<ItemModel> itemsOnPage = pageSize == -1
-                    ? await sorted.ToListAsync()
-                    : await sorted
-                     .Skip(pageSize * pageIndex)
-                     .Take(pageSize)
-                     .ToListAsync();
-
-
-                return new Page<ItemModel>(pageIndex, pageSize, count, itemsOnPage);
-            }
-        }
-
-        public async Task<Guid?> UpdateItem(ItemModel updatedItem)
-        {
-            using (var context = this.CreateContext())
-            {
-                var catalogItem = await context.Item.SingleOrDefaultAsync(i => i.Id == updatedItem.Id);
-
-                if(catalogItem == null)
-                {
-                    return null;
-                }
-
-                catalogItem = updatedItem;
-                await context.SaveChangesAsync();
-
-                return updatedItem.Id;
-            }
-        }
-
-        private IOrderedQueryable<ItemModel> Sort(IQueryable<ItemModel> query, string order, string orderBy)
-        {
-            return orderBy.ToLower() switch
-            {
-                "code" => order == "desc"
-                ? query.OrderByDescending(i => i.Code)
-                : query.OrderBy(i => i.Code),
-
-                "category" => order == "desc"
-                ? query.OrderByDescending(i => i.Category)
-                : query.OrderBy(i => i.Category),
-
-                "price" => order == "desc"
-                ? query.OrderByDescending(i => i.Price)
-                : query.OrderBy(i => i.Price),
-
-                _ => order == "desc"
-                ? query.OrderByDescending(i => i.Name)
-                : query.OrderBy(i => i.Name),
+                "code" => record.Code,
+                "category" => record.Category,
+                "price" => record.Price,
+                _ => record.Name
             };
         }
     }

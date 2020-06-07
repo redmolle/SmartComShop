@@ -8,17 +8,17 @@ namespace Models
     /// Модель пейджинга.
     /// </summary>
     /// <typeparam name="TEntity">Элемент на странице.</typeparam>
-    public class Page<TEntity> where TEntity : class
+    public class PageModel<TEntity> where TEntity : class
     {
         /// <summary>
         /// Номер страницы.
         /// </summary>
-        public int PageIndex { get; private set; }
+        public int Page { get; private set; }
 
         /// <summary>
         /// Размер страницы.
         /// </summary>
-        public int PageSize { get; private set; }
+        public int RowsPerPage { get; private set; }
 
         /// <summary>
         /// Общее количество элементов.
@@ -33,15 +33,15 @@ namespace Models
         /// <summary>
         /// Создание страницы.
         /// </summary>
-        /// <param name="pageIndex">Номер страницы.</param>
-        /// <param name="pageSize">Размер страницы.</param>
-        /// <param name="count">Общее количество элементов.</param>
+        /// <param name="page">Номер страницы.</param>
+        /// <param name="rowsPerPage">Размер страницы.</param>
+        /// <param name="totalCount">Общее количество элементов.</param>
         /// <param name="data">Данные на странице.</param>
-        public Page(int pageIndex, int pageSize, long count, IEnumerable<TEntity> data)
+        public PageModel(int page, int rowsPerPage, long totalCount, IEnumerable<TEntity> data)
         {
-            this.PageIndex = pageIndex;
-            this.PageSize = pageSize;
-            this.Count = count;
+            this.Page = page;
+            this.RowsPerPage = rowsPerPage;
+            this.Count = totalCount;
             this.Data = data;
         }
     }

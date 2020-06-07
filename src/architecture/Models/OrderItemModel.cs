@@ -9,7 +9,7 @@ namespace Models
     /// <summary>
     /// Элемент заказа.
     /// </summary>
-    public class OrderItem
+    public class OrderItemModel
     {
         /// <summary>
         /// Первичный ключ определяющий запись в таблице.
