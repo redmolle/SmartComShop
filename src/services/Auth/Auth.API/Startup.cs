@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Auth.Lib;
 using DAL;
-using DAL.Identity;
+using DAL.Customer;
+using DAL.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,17 +32,29 @@ namespace Auth.API
             services.AddControllers();
 
             services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
-            services.AddScoped<IIdentityRepository>(
+            services.AddScoped<IUserRepository>(
                 provider =>
-                new IdentityRepository(Configuration.GetConnectionString("DefaultConnection"),
+                new UserRepository(Configuration.GetConnectionString("DefaultConnection"),
+                                      provider.GetService<IRepositoryContextFactory>())
+            );
+            services.AddScoped<ICustomerRepository>(
+                provider =>
+                new CustomerRepository(Configuration.GetConnectionString("DefaultConnection"),
                                       provider.GetService<IRepositoryContextFactory>())
             );
 
             JwtAuth.SetAuthService(services);
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseCors(options =>
+            options.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

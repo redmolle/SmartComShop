@@ -7,9 +7,6 @@ const initialState = {
 
 export const CatalogReducer = (state = initialState, action) => {
 	switch (action.type) {
-		case ACTION_TYPES.FETCH_ALL:
-        case ACTION_TYPES.FETCH_BY_PAGE:
-		case ACTION_TYPES.ORDERED_FETCH:
 		case ACTION_TYPES.ENHANCED_FETCH:
 			return {
 				...state,

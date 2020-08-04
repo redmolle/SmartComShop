@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\data\DAL\DAL.csproj" />
+    <ProjectReference Include="..\..\..\utils\Utils.Lib\Utils.Lib.csproj" />
     <ProjectReference Include="..\..\Auth\Auth.Lib\Auth.Lib.csproj" />
   </ItemGroup>
 

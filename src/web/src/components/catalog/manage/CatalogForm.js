@@ -44,7 +44,7 @@ const initialFieldValues = {
 };
 
 const CatalogForm = ({ classes, ...props }) => {
-	const { currentId, setCurrentId } = props;
+	// const { currentId, setCurrentId } = props;
 
 	const { addToast } = useToasts();
 
@@ -72,7 +72,7 @@ const CatalogForm = ({ classes, ...props }) => {
 		setErrors,
 		handleInputChange,
 		resetForm,
-	} = useForm(initialFieldValues, validate, setCurrentId);
+	} = useForm(initialFieldValues, validate, props.setCurrentId);
 
 	const inputLabel = React.useRef(null);
 	const [labelWidth, setLabelWidth] = React.useState(0);
@@ -87,24 +87,24 @@ const CatalogForm = ({ classes, ...props }) => {
 				resetForm();
 				addToast("Успешно сохранено!", { appearance: "success" });
 			};
-			if (currentId == 0) {
+			if (props.currentId == 0) {
 				props.createItem(values, onSuccess);
 			} else {
-				console.log(currentId);
-				props.updateItem(currentId, values, onSuccess);
+				console.log(props.currentId);
+				props.updateItem(props.currentId, values, onSuccess);
 			}
 		}
 	};
 
 	useEffect(() => {
-		if (currentId != 0) {
+		if (props.currentId != 0) {
 			setValues({ ...props.ItemList.find((x) => x.id == props.currentId) });
 		} else {
 			resetForm()
 		}
 		setErrors({});
-	}, [currentId]);
-	
+	}, [props.currentId]);
+
 	return (
 		<form
 			autoComplete='off'

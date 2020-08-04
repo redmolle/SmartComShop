@@ -7,13 +7,8 @@ namespace Models
     /// <summary>
     /// Роль пользователя.
     /// </summary>
-    public class Role
+    public class UserRole
     {
-        /// <summary>
-        /// Администратор.
-        /// </summary>
-        public const string Admin = "Admin";
-
         /// <summary>
         /// Менеджер.
         /// </summary>
@@ -24,9 +19,6 @@ namespace Models
         /// </summary>
         public const string Customer = "Customer";
 
-        /// <summary>
-        /// Набор ролей для проверки.
-        /// </summary>
-        public static IEnumerable<string> Set => new List<string> { Admin, Manager, Customer };
+        public const string All = "Manager,Customer";
     }
 }

@@ -33,7 +33,7 @@ namespace Auth.Lib
         /// <summary>
         /// время жизни токена - 1 минута.
         /// </summary>
-        private const int LIFETIME = 1;
+        private const int LIFETIME = 15;
 
         /// <summary>
         /// Генератор ключа.

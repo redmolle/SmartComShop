@@ -57,6 +57,6 @@ namespace Models
         /// <summary>
         /// Элементы заказа.
         /// </summary>
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<OrderItemModel> OrderItems { get; set; }
     }
 }

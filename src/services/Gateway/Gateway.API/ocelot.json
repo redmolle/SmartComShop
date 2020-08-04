@@ -5,7 +5,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "192.168.0.111",
           "Port": 10000
         }
       ],
@@ -17,19 +17,55 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 8000
+          "Host": "192.168.0.111",
+          "Port": 15000
         }
       ],
       "UpstreamPathTemplate": "/api/auth/{catchAll}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
-    }
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/{catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "192.168.0.111",
+          "Port": 14000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/order/{catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/{catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "192.168.0.111",
+          "Port": 11000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cart/{catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/{catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "192.168.0.111",
+          "Port": 12000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/user/{catchAll}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
   ],
-    "AuthenticationOptions": {
-    "AuthenticationProviderKey": "IdentityApiKey",
-    "AllowedScopes": []
-  },
+  //  "AuthenticationOptions": {
+  //  "AuthenticationProviderKey": "IdentityApiKey",
+  //  "AllowedScopes": []
+  //},
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:7000"
+    "BaseUrl": "http://192.168.0.111:7000"
   }
 }

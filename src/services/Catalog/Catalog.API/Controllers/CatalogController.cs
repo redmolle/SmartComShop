@@ -6,6 +6,7 @@ using DAL.Catalog;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Utils.Lib;
 
 namespace Catalog.API.Controllers
 {
@@ -21,74 +22,81 @@ namespace Catalog.API.Controllers
         }
 
         [HttpGet]
-        [Route("items")]
-        public async Task<IActionResult> Items([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0, [FromQuery]string order = "asc", [FromQuery]string orderBy="name", [FromQuery]string search=null)
+        [Route("{id}")]
+        public async Task<IActionResult> Read(Guid id)
         {
-            return Ok(await this._repository.GetItems(pageSize, pageIndex, order, orderBy, search));
-        }
-
-        [HttpGet]
-        [Route("items/{id:Guid}")]
-        public async Task<IActionResult> ItemById(Guid id)
-        {
-            var item = await this._repository.GetItem(id);
-            if (item != null)
+            var fromDb = await this.ReadFromDb(id);
+            if (fromDb == null)
             {
-                return Ok(item);
+                return NotFound(HttpUtils.GenerateError("Товар не найден"));
             }
-
-            return BadRequest();
+            return Ok(fromDb);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ReadPage([FromQuery]int rowsPerPage = 10, [FromQuery]int page = 0, [FromQuery]string order = "asc", [FromQuery]string orderBy="name", [FromQuery]string searchString=null)
+        {
+            return Ok(await this._repository.ReadPage(rowsPerPage, page, order, orderBy, searchString));
         }
 
-        [HttpGet]
-        [Route("items/category/{category}")]
-        public async Task<IActionResult> ItemsByCategory(string category, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0, [FromQuery]string order = "asc", [FromQuery]string orderBy = "name")
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody]ItemModel record)
         {
-            return Ok(await this._repository.GetItems(pageSize, pageIndex, category, order, orderBy));
+            var id = await this._repository.Create(record);
+            if (id == null)
+            {
+                return BadRequest(HttpUtils.GenerateError("Товар не создан"));
+            }
+            return CreatedAtAction(nameof(Read), new { id = id }, null);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody]ItemModel record)
+        {
+            var oldRecord = await this.ReadFromDb(record.Id);
+            if (oldRecord == null)
+            {
+                return NotFound(HttpUtils.GenerateError("Товар не найден"));
+            }
+            var wasUpdated = await this._repository.Update(record);
+            if (!wasUpdated)
+            {
+                return BadRequest(HttpUtils.GenerateError("Товар не обновлен"));
+            }
+            return CreatedAtAction(nameof(Read), new { id = record.Id }, null);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var oldRecord = await this.ReadFromDb(id);
+            if (oldRecord == null)
+            {
+                return NotFound(HttpUtils.GenerateError("Товар не найден"));
+            }
+            var wasDeleted = await this._repository.Delete(id);
+            if (!wasDeleted)
+            {
+                return BadRequest(HttpUtils.GenerateError("Товар не удален"));
+            }
+            return NoContent();
         }
 
         [HttpGet]
         [Route("categories")]
         public async Task<IActionResult> Categories()
         {
-            return Ok(await this._repository.GetCategories());
-        }
-
-        [HttpPut]
-        //[Authorize(Roles = Role.Manager)]
-        [Route("items/{id:Guid}")]
-        public async Task<IActionResult> UpdateItem(Guid id, [FromBody]ItemModel item)
-        {
-            var oldItem = await this._repository.GetItem(id);
-            if (oldItem == null)
+            return Ok(new List<string>
             {
-                return NotFound(new { Message = $"Item with id {item.Id} not found." });
-            }
-            var updatedGuid = await this._repository.UpdateItem(item);
-            return CreatedAtAction(nameof(ItemById), new { id = item.Id }, null);
+                CatalogCategories.Car,
+                CatalogCategories.Moto,
+                CatalogCategories.Water
+            });
         }
 
-        [HttpPost]
-        //[Authorize(Roles = Role.Manager)]
-        [Route("items")]
-        public async Task<IActionResult> CreateItem([FromBody]ItemModel item)
+        private async Task<ItemModel> ReadFromDb(Guid id)
         {
-            var createdGuid = await this._repository.CreateItem(item);
-            return CreatedAtAction(nameof(ItemById), new { id = createdGuid }, null);
-        }
-
-        [HttpDelete]
-        //[Authorize(Roles = Role.Manager)]
-        [Route("items/{id}")]
-        public async Task<IActionResult> DeleteItem(Guid id)
-        {
-            var wasDeleted = await this._repository.DeleteItem(id);
-            if (!wasDeleted)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
+            return await this._repository.Read(id);
         }
     }
 }

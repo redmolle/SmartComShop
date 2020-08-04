@@ -16,7 +16,7 @@ namespace DAL.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.3")
+                .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Models.CustomerModel", b =>
@@ -68,7 +68,7 @@ namespace DAL.Migrations
                     b.ToTable("Item");
                 });
 
-            modelBuilder.Entity("Models.OrderItem", b =>
+            modelBuilder.Entity("Models.OrderItemModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,6 +129,15 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("Cusomer_Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("Customer_Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsManager")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasColumnType("text");
@@ -137,15 +146,14 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("RoleSet")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("Cusomer_Id");
 
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Models.OrderItem", b =>
+            modelBuilder.Entity("Models.OrderItemModel", b =>
                 {
                     b.HasOne("Models.ItemModel", "Item")
                         .WithMany()
@@ -167,6 +175,13 @@ namespace DAL.Migrations
                         .HasForeignKey("Customer_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.UserModel", b =>
+                {
+                    b.HasOne("Models.CustomerModel", "Customer")
+                        .WithMany()
+                        .HasForeignKey("Cusomer_Id");
                 });
 #pragma warning restore 612, 618
         }
